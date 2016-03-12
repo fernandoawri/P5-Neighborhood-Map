@@ -7,12 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>P5--Neighborhood Map</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Serif'>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.min.css">
     <link rel="stylesheet" href="styles.css">
-    <link href="css/style.css" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Serif' rel='stylesheet' type='text/css'>
-	   <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+    <link rel="stylesheet" href="css/style.css">
+
   </head>
   <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -86,12 +86,19 @@
         <div id="righ-sidebar" class="android-drawer mdl-layout__drawer_right">
           <div class="demo-card-wide mdl-card mdl-shadow--2dp">
             <div class="mdl-card__title">
-              <h2 class="mdl-card__title-text"><span data-bind="text: currentInfo().yelp.name"></span></h2>
+              <br><br><br>
             </div>
             <div class="mdl-card__supporting-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Mauris sagittis pellentesque lacus eleifend lacinia...
-              <br>&nbsp;0
+              <nav class="mdl-navigation" >
+                <div data-bind="foreach: centers">
+                  <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name, false)" style="padding: 5px 5px;">
+                    <span class="mdl-list__item-primary-content">
+                    <i class="material-icons mdl-list__item-icon">visibility</i>
+                    <span data-bind="text: $data.name">
+                  </a>
+                </div>
+              </nav>
+              <br><br>
             </div>
             <div class="mdl-card__actions mdl-card--border">
               <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
@@ -104,13 +111,21 @@
               </button>
             </div>
           </div>
+          <br><br>
           <div class="demo-card-wide mdl-card mdl-shadow--2dp">
             <div class="mdl-card__title">
-              <h2 class="mdl-card__title-text">Welcome</h2>
+              <br><br><br>
             </div>
             <div class="mdl-card__supporting-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Mauris sagittis pellentesque lacus eleifend lacinia...
+              <nav class="mdl-navigation" >
+                <div data-bind="foreach: centers">
+                  <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name, false)" style="padding: 5px 5px;">
+                    <span class="mdl-list__item-primary-content">
+                    <i class="material-icons mdl-list__item-icon">visibility</i>
+                    <span data-bind="text: $data.name">
+                  </a>
+                </div>
+              </nav>
             </div>
             <div class="mdl-card__actions mdl-card--border">
               <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
@@ -123,13 +138,21 @@
               </button>
             </div>
           </div>
+          <br><br>
           <div class="demo-card-wide mdl-card mdl-shadow--2dp">
             <div class="mdl-card__title">
-              <h2 class="mdl-card__title-text">Welcome</h2>
+              <br><br><br>
             </div>
             <div class="mdl-card__supporting-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Mauris sagittis pellentesque lacus eleifend lacinia...
+              <nav class="mdl-navigation" >
+                <div data-bind="foreach: centers">
+                  <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name, false)" style="padding: 5px 5px;">
+                    <span class="mdl-list__item-primary-content">
+                    <i class="material-icons mdl-list__item-icon">visibility</i>
+                    <span data-bind="text: $data.name">
+                  </a>
+                </div>
+              </nav>
             </div>
             <div class="mdl-card__actions mdl-card--border">
               <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">

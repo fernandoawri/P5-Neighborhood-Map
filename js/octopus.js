@@ -1,74 +1,152 @@
 var Octopus = function() {
-  this.centers = ko.observableArray(model.centers);
-  this.markers = ko.observableArray();
-  this.backUp = ko.observableArray();
-  this.currentInfo = ko.observable(currentInfo);
-  this.addedList = ko.observableArray();
-  this.newPlaceFlag = false;
-  this.filterFlag = false;
-  this.filtered = false;
+  var self = this;
+  self.centers = ko.observableArray(model.centers);
+  self.markers = ko.observableArray();
+  self.wikiList = ko.observableArray();
+  self.yelpList = ko.observableArray();
+  self.nyTimesList = ko.observableArray();
+  self.backUp = ko.observableArray();
+  self.currentInfo = ko.observable();
+  self.addedList = ko.observableArray();
+  self.newPlaceFlag = false;
+  self.filterFlag = false;
+  self.filtered = false;
 
-
-  this.showToast = function (text){
+  self.showToast = function (text){
     'use strict';
     var snackbarContainer = document.querySelector('#toast-map-message');
     var data = {message: text};
     snackbarContainer.MaterialSnackbar.showSnackbar(data);
   }
 
-  this.viewMarker = function (nameMaker, added){
-      for(marker in this.markers()){
-        var makerNm = this.markers()[marker].title;
+  self.viewMarker = function (nameMaker, added){
+      for(marker in self.markers()){
+        var makerNm = self.markers()[marker].title;
         if(makerNm === nameMaker){
           if(added){
-            this.newPlaceFlag = true;
+            self.newPlaceFlag = true;
           }
-          google.maps.event.trigger(this.markers()[marker], 'click');
+          google.maps.event.trigger(self.markers()[marker], 'click');
         }
       }
 
-      if(!this.filterFlag){
+      if(!self.filterFlag){
         $('#menu-principal').removeClass('is-visible');
         $('.mdl-layout__obfuscator').removeClass('is-visible');
       }
   }
 
-  this.updateList = function (text, centers){
+  self.updateList = function (text, centers){
     var count;
-    if(this.filtered){
-      count = this.backUp().length;
-      this.centers.removeAll();
+    if(self.filtered){
+      count = self.backUp().length;
+      self.centers.removeAll();
       for(var i = 0; i < count; i++){
-        this.centers.push(this.backUp.pop());
+        self.centers.push(self.backUp.pop());
       }
     }
-    count = this.centers().length;
+    count = self.centers().length;
     for(var i = 0; i < count; i++){
-      this.backUp.push(this.centers()[i]);
+      self.backUp.push(self.centers()[i]);
     }
     var temparray = [];
     for(var i = 0; i < count; i++){
-      var namePlace = this.centers()[i].name.toLowerCase();
+      var namePlace = self.centers()[i].name.toLowerCase();
       if(namePlace.startsWith(text)){
-        temparray.push(this.centers()[i]);
+        temparray.push(self.centers()[i]);
       }
     }
-    this.centers.removeAll();
+    self.centers.removeAll();
     for(var i = 0; i < temparray.length; i++){
-      this.centers.push(temparray[i]);
+      self.centers.push(temparray[i]);
     }
 
-    this.filtered = true;
+    self.filtered = true;
   }
 
-  this.restoreData = function (){
-    var count = this.backUp().length;
+  self.restoreData = function (){
+    var count = self.backUp().length;
     if(count > 0){
-      this.centers.removeAll();
+      self.centers.removeAll();
       for(var i = 0; i < count; i++){
-        this.centers.push(this.backUp.pop());
+        self.centers.push(self.backUp.pop());
       }
     }
+  }
+
+  self.loadWikiInfo = function (){
+    var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + self.currentInfo().name + '&format=json&callback=wikiCallback';
+    self.wikiList.removeAll();
+    $.ajax({
+      url: wikiUrl,
+      dataType: 'jsonp',
+      success: function(response) {
+       var asticleList = response[1];
+       for (var i = 0; i < asticleList.length; i++) {
+         var articleStr = asticleList[i];
+         var url = 'https://en.wikipedia.org/wiki/' + articleStr;
+         self.wikiList.push('<a href="' + url + '" class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">visibility</i>' + articleStr + '</a>');
+       }
+      }
+    }).error(function(e){
+      self.wikiList.push('<a class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;">Relevant Wikipedia Links could not be loaded</a>');
+    });
+  }
+
+  self.loadNYTimesInfo = function (){
+    console.log(self.currentInfo().name);
+    var urlNYT = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?&fq=glocations.contains:("' + self.currentInfo().name + '")&api-key=0ed05b060b420f576bcfaffb4d33d845:10:74237526';
+    self.nyTimesList.removeAll();
+    $.getJSON(urlNYT, function(data){
+      var docsArray = data.response.docs;
+      for (doc in docsArray) {
+        var article = docsArray[doc];
+        self.nyTimesList.push('<a href="' + article.web_url + '" class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">visibility</i>' + article.headline.main + '</a><p>' + article.snippet + '</p>');
+  		}
+    }).error(function(e){
+      self.nyTimesList.push('<a class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;">Relevant NY-Times Links could not be loaded</a>');
+    });
+  }
+
+  self.loadYelpInfo = function (){
+    var auth = {
+      consumerKey : "uX9urW8948FOK9NL8FNgAw",
+      consumerSecret : "UrfgKHHtzdnFN2irv2PcOWi0jio",
+      accessToken : "9juC59OZki6K6aS-FhO_hTU6JSsiQofJ",
+      accessTokenSecret : "g4Pg14xztkTCQrETWru_79xgODg",
+      serviceProvider : {
+        signatureMethod : "HMAC-SHA1"
+      }
+    };
+    var accessor = {
+      consumerSecret : auth.consumerSecret,
+      tokenSecret : auth.accessTokenSecret
+    };
+    parameters = [];
+    parameters.push(['callback', 'cb']);
+    parameters.push(['oauth_consumer_key', auth.consumerKey]);
+    parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
+    parameters.push(['oauth_token', auth.accessToken]);
+    parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
+    var message = {
+      'action' : 'https://api.yelp.com/v2/search/?location=harrisburg',
+      'method' : 'GET',
+      'parameters' : parameters
+    };
+    OAuth.setTimestampAndNonce(message);
+    OAuth.SignatureMethod.sign(message, accessor);
+    var parameterMap = OAuth.getParameterMap(message.parameters);
+    parameterMap.oauth_signature = OAuth.percentEncode(parameterMap.oauth_signature)
+    $.ajax({
+      'url' : message.action,
+      'data' : parameterMap,
+      'cache' : true,
+      'dataType' : 'jsonp',
+      'jsonpCallback' : 'cb',
+      'success' : function(data, textStats, XMLHttpRequest) {
+        console.log(data);
+      }
+    });
   }
 };
 
@@ -154,6 +232,10 @@ function createMapMarker(placeData) {
       $('#righ-sidebar').toggleClass('is-visible');
     });
     vM.viewModel.newPlaceFlag = false;
+    vM.viewModel.currentInfo(newPlace);
+    vM.viewModel.loadWikiInfo();
+    vM.viewModel.loadNYTimesInfo();
+    vM.viewModel.loadYelpInfo();
   }
 
   google.maps.event.addListener(marker, 'click', function() {
@@ -172,6 +254,10 @@ function createMapMarker(placeData) {
         if(modelName === name){
           var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + vM.viewModel.addedList()[center].location + '';
           contentString = '<h3>' + vM.viewModel.addedList()[center].name + '</h3><h4>' + vM.viewModel.addedList()[center].location + '</h4><center><img class="street-view-img" src="' + streetviewUrl + '">';
+          vM.viewModel.currentInfo(vM.viewModel.centers()[center]);
+          vM.viewModel.loadWikiInfo();
+          vM.viewModel.loadNYTimesInfo();
+          vM.viewModel.loadYelpInfo();
         }
       }
       vM.viewModel.newPlaceFlag = false;
@@ -182,6 +268,10 @@ function createMapMarker(placeData) {
         if(modelName === name){
           var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + vM.viewModel.centers()[center].location + '';
           contentString = '<h3>' + vM.viewModel.centers()[center].name + '</h3><h4>' + vM.viewModel.centers()[center].location + '</h4><center><img class="street-view-img" src="' + streetviewUrl + '">';
+          vM.viewModel.currentInfo(vM.viewModel.centers()[center]);
+          vM.viewModel.loadWikiInfo();
+          vM.viewModel.loadNYTimesInfo();
+          vM.viewModel.loadYelpInfo();
         }
       }
     }

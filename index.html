@@ -85,7 +85,7 @@
         <div id="mapDiv"></div>
         <div id="righ-sidebar" class="android-drawer mdl-layout__drawer_right">
           <div class="demo-card-wide mdl-card mdl-shadow--2dp">
-            <div class="mdl-card__title">
+            <div class="mdl-card__title" style="background: url('images/yelp.jpg') center / cover;">
               <br><br><br>
             </div>
             <div class="mdl-card__supporting-text">
@@ -98,56 +98,32 @@
                   </a>
                 </div>
               </nav>
-              <br><br>
-            </div>
-            <div class="mdl-card__actions mdl-card--border">
-              <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-                Get Started
-              </a>
             </div>
           </div>
-          <br><br>
+          <br>
           <div class="demo-card-wide mdl-card mdl-shadow--2dp">
-            <div class="mdl-card__title">
+            <div class="mdl-card__title" style="background: url('images/nytimes.jpg') center / cover;">
               <br><br><br>
             </div>
             <div class="mdl-card__supporting-text">
               <nav class="mdl-navigation" >
-                <div data-bind="foreach: centers">
-                  <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name, false)" style="padding: 5px 5px;">
-                    <span class="mdl-list__item-primary-content">
-                    <i class="material-icons mdl-list__item-icon">visibility</i>
-                    <span data-bind="text: $data.name">
-                  </a>
+                <div data-bind="foreach: nyTimesList">
+                    <span data-bind="html: $data"></span>
                 </div>
               </nav>
-            </div>
-            <div class="mdl-card__actions mdl-card--border">
-              <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-                Get Started
-              </a>
             </div>
           </div>
-          <br><br>
+          <br>
           <div class="demo-card-wide mdl-card mdl-shadow--2dp">
-            <div class="mdl-card__title">
+            <div class="mdl-card__title" style="background: url('images/wiki.png') center / cover;">
               <br><br><br>
             </div>
             <div class="mdl-card__supporting-text">
               <nav class="mdl-navigation" >
-                <div data-bind="foreach: centers">
-                  <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name, false)" style="padding: 5px 5px;">
-                    <span class="mdl-list__item-primary-content">
-                    <i class="material-icons mdl-list__item-icon">visibility</i>
-                    <span data-bind="text: $data.name">
-                  </a>
+                <div data-bind="foreach: wikiList">
+                    <span data-bind="html: $data"></span>
                 </div>
               </nav>
-            </div>
-            <div class="mdl-card__actions mdl-card--border">
-              <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-                Get Started
-              </a>
             </div>
           </div>
         </div>
@@ -157,11 +133,12 @@
       <div class="mdl-snackbar__text"></div>
       <button class="mdl-snackbar__action" type="button"></button>
     </div>
-
     <script src="js/knockout-3.4.0.js"></script>
+    <script src="js/jQuery.js"></script>
     <script async src="https://code.getmdl.io/1.1.1/material.min.js"></script>
     <script async src="http://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDRtqNO8N2dY-v4dL3WTlbqyU0iBq-MpiE"></script>
-    <script src="js/jQuery.js"></script>
+    <script src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+    <script src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
     <script async src="js/model.js"></script>
     <script async src="js/octopus.js"></script>
   </body>

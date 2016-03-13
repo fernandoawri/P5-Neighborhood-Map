@@ -133,14 +133,7 @@ function createMapMarker(placeData) {
     position: placeData.geometry.location,
     title: name
   });
-  marker.addListener('click', function() {
-    if (marker.getAnimation() !== null) {
-      marker.setAnimation(null);
-    } else {
-      marker.setAnimation(google.maps.Animation.BOUNCE);
-    }
-    setTimeout(function(){ marker.setAnimation(null); }, 1400);
-  });
+
   vM.viewModel.markers.push(marker);
 
   if(vM.viewModel.newPlaceFlag){
@@ -151,23 +144,34 @@ function createMapMarker(placeData) {
     }
     vM.viewModel.addedList.push(newPlace);
     vM.viewModel.showToast(name + ' added to list');
-
-    infoWindow.setContent('<h3>' + name + '</h3><h4>' + formattedAddress + '</h4><br><center><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">More info</button></center>');
+    var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + formattedAddress + '';
+    infoWindow.setContent('<h3>' + name + '</h3><h4>' + formattedAddress + '</h4><br><center><img class="street-view-img" src="' + streetviewUrl + '"><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Show info</button></center>');
     infoWindow.open(map, marker);
     $('#more-info').click(function() {
+      $(this).text(function(i, text){
+          return text === 'Hide info' ? 'Show info' : 'Hide info';
+      })
       $('#righ-sidebar').toggleClass('is-visible');
     });
     vM.viewModel.newPlaceFlag = false;
   }
 
   google.maps.event.addListener(marker, 'click', function() {
+    if (marker.getAnimation() !== null) {
+      marker.setAnimation(null);
+    } else {
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+    setTimeout(function(){ marker.setAnimation(null); }, 1400);
+
     var contentString = '';
 
     if(vM.viewModel.newPlaceFlag){
       for(center in vM.viewModel.addedList()){
         var modelName = vM.viewModel.addedList()[center].name;
         if(modelName === name){
-          contentString = '<h3>' + vM.viewModel.addedList()[center].name + '</h3><h4>' + vM.viewModel.addedList()[center].location + '</h4>';
+          var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + vM.viewModel.addedList()[center].location + '';
+          contentString = '<h3>' + vM.viewModel.addedList()[center].name + '</h3><h4>' + vM.viewModel.addedList()[center].location + '</h4><center><img class="street-view-img" src="' + streetviewUrl + '">';
         }
       }
       vM.viewModel.newPlaceFlag = false;
@@ -176,19 +180,24 @@ function createMapMarker(placeData) {
       for(center in vM.viewModel.centers()){
         var modelName = vM.viewModel.centers()[center].name;
         if(modelName === name){
-          contentString = '<h3>' + vM.viewModel.centers()[center].name + '</h3><h4>' + vM.viewModel.centers()[center].location + '</h4>';
+          var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + vM.viewModel.centers()[center].location + '';
+          contentString = '<h3>' + vM.viewModel.centers()[center].name + '</h3><h4>' + vM.viewModel.centers()[center].location + '</h4><center><img class="street-view-img" src="' + streetviewUrl + '">';
         }
       }
     }
+    var textButton;
+    if($('#more-info').text() === 'Hide info')
+      textButton = 'Hide info';
+    else
+      textButton = 'Show info';
 
-    contentString = contentString + '<br><center><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">More info</button></center>';
+    contentString = contentString + '<br><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">' + textButton + '</button></center>';
+
 
     infoWindow.setContent(contentString);
 
     if(!vM.viewModel.filterFlag){
       infoWindow.open(map, marker);
-      $('#righ-sidebar').addClass('is-visible');
-      $('#more-info').text('Hide info');
     }
 
     $('#more-info').click(function() {

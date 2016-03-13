@@ -324,3 +324,9 @@ span {
     padding: 8px;
     box-sizing: border-box;
 }
+
+.street-view-img {
+  width: 80%;
+  max-width: 400px;
+  height: 150px;
+}

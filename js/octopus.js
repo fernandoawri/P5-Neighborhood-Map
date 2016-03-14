@@ -19,13 +19,10 @@ var Octopus = function() {
     snackbarContainer.MaterialSnackbar.showSnackbar(data);
   }
 
-  self.viewMarker = function (nameMaker, added){
+  self.viewMarker = function (nameMaker){
       for(marker in self.markers()){
         var makerNm = self.markers()[marker].title;
         if(makerNm === nameMaker){
-          if(added){
-            self.newPlaceFlag = true;
-          }
           google.maps.event.trigger(self.markers()[marker], 'click');
         }
       }
@@ -85,7 +82,7 @@ var Octopus = function() {
        for (var i = 0; i < asticleList.length; i++) {
          var articleStr = asticleList[i];
          var url = 'https://en.wikipedia.org/wiki/' + articleStr;
-         self.wikiList.push('<a href="' + url + '" class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">visibility</i>' + articleStr + '</a>');
+         self.wikiList.push('<a href="' + url + '" class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">book</i> - ' + articleStr + '</a><div class="android-drawer-separator"></div>');
        }
       }
     }).error(function(e){
@@ -94,14 +91,13 @@ var Octopus = function() {
   }
 
   self.loadNYTimesInfo = function (){
-    console.log(self.currentInfo().name);
     var urlNYT = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?&fq=glocations.contains:("' + self.currentInfo().name + '")&api-key=0ed05b060b420f576bcfaffb4d33d845:10:74237526';
     self.nyTimesList.removeAll();
     $.getJSON(urlNYT, function(data){
       var docsArray = data.response.docs;
       for (doc in docsArray) {
         var article = docsArray[doc];
-        self.nyTimesList.push('<a href="' + article.web_url + '" class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">visibility</i>' + article.headline.main + '</a><p>' + article.snippet + '</p>');
+        self.nyTimesList.push('<a href="' + article.web_url + '" class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">line_style</i> - ' + article.headline.main + '</a><p class="mdl-card__supporting-text">' + article.snippet + '</p><div class="android-drawer-separator"></div>');
   		}
     }).error(function(e){
       self.nyTimesList.push('<a class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;">Relevant NY-Times Links could not be loaded</a>');
@@ -129,7 +125,7 @@ var Octopus = function() {
     parameters.push(['oauth_token', auth.accessToken]);
     parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
     var message = {
-      'action' : 'https://api.yelp.com/v2/search/?location=harrisburg',
+      'action' : 'https://api.yelp.com/v2/search/?location=' + self.currentInfo().location,
       'method' : 'GET',
       'parameters' : parameters
     };
@@ -137,6 +133,7 @@ var Octopus = function() {
     OAuth.SignatureMethod.sign(message, accessor);
     var parameterMap = OAuth.getParameterMap(message.parameters);
     parameterMap.oauth_signature = OAuth.percentEncode(parameterMap.oauth_signature)
+    self.yelpList.removeAll();
     $.ajax({
       'url' : message.action,
       'data' : parameterMap,
@@ -144,7 +141,11 @@ var Octopus = function() {
       'dataType' : 'jsonp',
       'jsonpCallback' : 'cb',
       'success' : function(data, textStats, XMLHttpRequest) {
-        console.log(data);
+        var businesses = data.businesses
+        for (business in businesses) {
+          console.log(businesses[business]);
+          self.yelpList.push('<a href="' + businesses[business].url + '" class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">face</i> - <div class="material-icons mdl-badge mdl-badge--overlap" data-badge="' + businesses[business].rating + '">start_rate</div>' + businesses[business].name + '</a><p class="mdl-card__supporting-text">' + businesses[business].snippet_text + '</p><div class="android-drawer-separator"></div>');
+    		}
       }
     });
   }
@@ -247,41 +248,37 @@ function createMapMarker(placeData) {
     setTimeout(function(){ marker.setAnimation(null); }, 1400);
 
     var contentString = '';
-
-    if(vM.viewModel.newPlaceFlag){
-      for(center in vM.viewModel.addedList()){
-        var modelName = vM.viewModel.addedList()[center].name;
-        if(modelName === name){
-          var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + vM.viewModel.addedList()[center].location + '';
-          contentString = '<h3>' + vM.viewModel.addedList()[center].name + '</h3><h4>' + vM.viewModel.addedList()[center].location + '</h4><center><img class="street-view-img" src="' + streetviewUrl + '">';
-          vM.viewModel.currentInfo(vM.viewModel.centers()[center]);
-          vM.viewModel.loadWikiInfo();
-          vM.viewModel.loadNYTimesInfo();
-          vM.viewModel.loadYelpInfo();
-        }
+    var findMarker = true;
+    for(center in vM.viewModel.addedList()){
+      var modelName = vM.viewModel.addedList()[center].name;
+      if(modelName === name){
+        findMarker = false;
+        var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + vM.viewModel.addedList()[center].location + '';
+        contentString = '<h3>' + vM.viewModel.addedList()[center].name + '</h3><h4>' + vM.viewModel.addedList()[center].location + '</h4><center><img class="street-view-img" src="' + streetviewUrl + '">';
+        vM.viewModel.currentInfo(vM.viewModel.addedList()[center]);
       }
-      vM.viewModel.newPlaceFlag = false;
     }
-    else{
+    if(findMarker){
       for(center in vM.viewModel.centers()){
         var modelName = vM.viewModel.centers()[center].name;
         if(modelName === name){
           var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + vM.viewModel.centers()[center].location + '';
           contentString = '<h3>' + vM.viewModel.centers()[center].name + '</h3><h4>' + vM.viewModel.centers()[center].location + '</h4><center><img class="street-view-img" src="' + streetviewUrl + '">';
           vM.viewModel.currentInfo(vM.viewModel.centers()[center]);
-          vM.viewModel.loadWikiInfo();
-          vM.viewModel.loadNYTimesInfo();
-          vM.viewModel.loadYelpInfo();
         }
       }
     }
+    vM.viewModel.loadWikiInfo();
+    vM.viewModel.loadNYTimesInfo();
+    vM.viewModel.loadYelpInfo();
+
     var textButton;
     if($('#more-info').text() === 'Hide info')
       textButton = 'Hide info';
     else
       textButton = 'Show info';
 
-    contentString = contentString + '<br><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">' + textButton + '</button></center>';
+    contentString = contentString + '<br><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect">' + textButton + '</button></center>';
 
 
     infoWindow.setContent(contentString);
@@ -352,7 +349,7 @@ function loadlayout(){
     vM.viewModel.newPlaceFlag = true;
     var newPlace = {
       'name' : $('#search-field').val(),
-      'location' : $('#search-field').val() + ', Harrisburg',
+      'location' : $('#search-field').val() + ', PA',
       'marker' : {}
     }
     pinPoster([newPlace]);
@@ -392,6 +389,12 @@ function loadlayout(){
       vM.viewModel.filterFlag = false;
       vM.viewModel.filtered = false;
     }
+  });
+  $('#more-info-sidebar').click(function() {
+    $('#more-info').text(function(i, text){
+        return text === 'Hide info' ? 'Show info' : 'Hide info';
+    })
+    $('#righ-sidebar').toggleClass('is-visible');
   });
 };
 

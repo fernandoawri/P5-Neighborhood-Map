@@ -33,7 +33,7 @@
           <!-- Navigation -->
           <div class="android-navigation-container">
             <nav class="android-navigation mdl-navigation">
-              <h2 id="title-search">Search</h2>
+              <h2 id="title-search">Search a city in PA</h2>
             </nav>
           </div>
           <span class="android-mobile-title mdl-layout-title">
@@ -63,7 +63,7 @@
         <nav class="mdl-navigation" >
           <span class="mdl-navigation__link" href="">Sport Centers</span>
           <div data-bind="foreach: centers">
-            <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name, false)" style="padding: 5px 5px;">
+            <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name)" style="padding: 5px 5px;">
               <span class="mdl-list__item-primary-content">
               <i class="material-icons mdl-list__item-icon">location_on</i>
               <span data-bind="text: $data.name">
@@ -72,7 +72,7 @@
           <div class="android-drawer-separator"></div>
           <span class="mdl-navigation__link" href="">Added</span>
           <div id="added-places" data-bind="foreach: addedList">
-            <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name, true)" style="padding: 5px 5px;">
+            <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name)" style="padding: 5px 5px;">
               <span class="mdl-list__item-primary-content">
               <i class="material-icons mdl-list__item-icon">location_on</i>
               <span data-bind="text: $data.name">
@@ -84,41 +84,28 @@
       <div class="android-content mdl-layout__content">
         <div id="mapDiv"></div>
         <div id="righ-sidebar" class="android-drawer mdl-layout__drawer_right">
-          <div class="demo-card-wide mdl-card mdl-shadow--2dp">
-            <div class="mdl-card__title" style="background: url('images/yelp.jpg') center / cover;">
-              <br><br><br>
+          <center><button id="more-info-sidebar" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect" style="width:100%;">Hide info</button></center>
+          <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+            <div class="mdl-tabs__tab-bar">
+                <a href="#starks-panel" class="mdl-tabs__tab is-active" style="background-color:red;color:white">YELP</a>
+                <a href="#lannisters-panel" class="mdl-tabs__tab" style="background-color:black;color:white">NYT</a>
+                <a href="#targaryens-panel" class="mdl-tabs__tab" style="background-color:grey;color:white">Wiki</a>
             </div>
-            <div class="mdl-card__supporting-text">
+            <div class="mdl-tabs__panel is-active" id="starks-panel">
               <nav class="mdl-navigation" >
-                <div data-bind="foreach: centers">
-                  <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name, false)" style="padding: 5px 5px;">
-                    <span class="mdl-list__item-primary-content">
-                    <i class="material-icons mdl-list__item-icon">visibility</i>
-                    <span data-bind="text: $data.name">
-                  </a>
+                <div data-bind="foreach: yelpList">
+                    <span data-bind="html: $data"></span>
                 </div>
               </nav>
             </div>
-          </div>
-          <br>
-          <div class="demo-card-wide mdl-card mdl-shadow--2dp">
-            <div class="mdl-card__title" style="background: url('images/nytimes.jpg') center / cover;">
-              <br><br><br>
-            </div>
-            <div class="mdl-card__supporting-text">
+            <div class="mdl-tabs__panel" id="lannisters-panel">
               <nav class="mdl-navigation" >
                 <div data-bind="foreach: nyTimesList">
                     <span data-bind="html: $data"></span>
                 </div>
               </nav>
             </div>
-          </div>
-          <br>
-          <div class="demo-card-wide mdl-card mdl-shadow--2dp">
-            <div class="mdl-card__title" style="background: url('images/wiki.png') center / cover;">
-              <br><br><br>
-            </div>
-            <div class="mdl-card__supporting-text">
+            <div class="mdl-tabs__panel" id="targaryens-panel">
               <nav class="mdl-navigation" >
                 <div data-bind="foreach: wikiList">
                     <span data-bind="html: $data"></span>

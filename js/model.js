@@ -2,38 +2,39 @@
 var model = {
 	'centers' : [
 		{
-			'name' : 'Sky Zone Trampoline Park',
-			'location' : 'Sky Zone, Mechanicsburg, PA 17050, USA'
+			'name' : 'Harrisburg',
+			'location' : 'Harrisburg, PA'
 		},
 		{
-			'name' : 'Linglestown Paintball',
-			'location' : 'Linglestown Paintball, Harrisburg, PA 17112, USA'
+			'name' : 'Hershey',
+			'location' : 'Hershey, PA'
 		},
 		{
-			'name' : 'Autobahn Indoor Speedway - Harrisburg / Lemoyne, PA',
-			'location' : 'Autobahn Indoor Speedway, Lemoyne, PA 17043, USA'
+			'name' : 'Philadelphia',
+			'location' : 'Philadelphia, PA'
 		},
 		{
-			'name' : 'Friendship Center',
-			'location' : 'Friendship Center, Harrisburg, PA 17112, USA'
+			'name' : 'Pittsburgh',
+			'location' : 'Pittsburgh, PA'
 		},
 		{
-			'name' : 'Susquehanna Outfitters',
-			'location' : 'Susquehanna Outfitters, City Island, Harrisburg, PA 17101, United States'
+			'name' : 'Reading',
+			'location' : 'Reading, PA'
+		}
+		,
+		{
+			'name' : 'Allentown',
+			'location' : 'Allentown, PA'
+		}
+		,
+		{
+			'name' : 'Gettysburg',
+			'location' : 'Gettysburg, PA'
+		}
+		,
+		{
+			'name' : 'Erie',
+			'location' : 'Erie, PA'
 		}
 	]
-}
-var currentInfo = {
-	'yelp' : {
-		'name' : 'Yelp info',
-		'location' : 'Sky Zone, Mechanicsburg, PA 17050, USA'
-	},
-	'Wiki' : {
-		'name' : 'Wiki',
-		'location' : 'Sky Zone, Mechanicsburg, PA 17050, USA'
-	},
-	'Fliker' : {
-		'name' : 'Fliker',
-		'location' : 'Sky Zone, Mechanicsburg, PA 17050, USA'
-	}
 }

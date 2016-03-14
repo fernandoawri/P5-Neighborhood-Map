@@ -5,6 +5,7 @@ var Octopus = function() {
   self.wikiList = ko.observableArray();
   self.yelpList = ko.observableArray();
   self.nyTimesList = ko.observableArray();
+  self.flickrList = ko.observableArray();
   self.backUp = ko.observableArray();
   self.currentInfo = ko.observable();
   self.addedList = ko.observableArray();
@@ -143,11 +144,33 @@ var Octopus = function() {
       'success' : function(data, textStats, XMLHttpRequest) {
         var businesses = data.businesses
         for (business in businesses) {
-          console.log(businesses[business]);
-          self.yelpList.push('<a href="' + businesses[business].url + '" class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">face</i> - <div class="material-icons mdl-badge mdl-badge--overlap" data-badge="' + businesses[business].rating + '">start_rate</div>' + businesses[business].name + '</a><p class="mdl-card__supporting-text">' + businesses[business].snippet_text + '</p><div class="android-drawer-separator"></div>');
+          self.yelpList.push('<a href="' + businesses[business].url + '" class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;"><span class="mdl-list__item-primary-content"><div class="material-icons mdl-badge mdl-badge--overlap" data-badge="' + businesses[business].rating + '">start_rate</div><br>' + businesses[business].name + '</a><p class="mdl-card__supporting-text">' + businesses[business].snippet_text + '</p><div class="android-drawer-separator"></div>');
     		}
       }
     });
+  }
+
+  self.loadFlickrImages = function (){
+    var flickerAPI = 'http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?';
+    self.flickrList.removeAll();
+    $.getJSON( flickerAPI, {
+      tags: self.currentInfo().name,
+      tagmode: 'any',
+      format: 'json'
+    }).done(function( data ) {
+      $.each( data.items, function( i, item ) {
+        var img = '<div class="demo-card-image mdl-card mdl-shadow--2dp" style="background: url("' + item.media.m + '") center / cover;"><div class="mdl-card__title mdl-card--expand">';
+        img = img + '</div><div class="mdl-card__actions"><span class="demo-card-image__filename">' + self.currentInfo().name + '</span></div></div>';
+        self.flickrList.push(img);
+      });
+    });
+  }
+
+  self.loadInfoSelected = function (){
+    self.loadWikiInfo();
+    self.loadNYTimesInfo();
+    self.loadYelpInfo();
+    self.loadFlickrImages();
   }
 };
 
@@ -234,9 +257,7 @@ function createMapMarker(placeData) {
     });
     vM.viewModel.newPlaceFlag = false;
     vM.viewModel.currentInfo(newPlace);
-    vM.viewModel.loadWikiInfo();
-    vM.viewModel.loadNYTimesInfo();
-    vM.viewModel.loadYelpInfo();
+    vM.viewModel.loadInfoSelected();
   }
 
   google.maps.event.addListener(marker, 'click', function() {
@@ -268,9 +289,8 @@ function createMapMarker(placeData) {
         }
       }
     }
-    vM.viewModel.loadWikiInfo();
-    vM.viewModel.loadNYTimesInfo();
-    vM.viewModel.loadYelpInfo();
+
+    vM.viewModel.loadInfoSelected();
 
     var textButton;
     if($('#more-info').text() === 'Hide info')

@@ -366,9 +366,11 @@ function loadlayout(){
   });
 
   var resizeH = $( window ).innerHeight() - $('.android-header').height();
+  var sidebarHeigh = resizeH - 100;
   resizeH += 'px';
+  sidebarHeigh += 'px';
   $('#mapDiv').css('height',resizeH);
-  $('#contest').css('height',resizeH);
+  $('#contest').css('height',sidebarHeigh);
 
   function sendNewPlace(){
     vM.viewModel.newPlaceFlag = true;
@@ -425,3 +427,4 @@ function loadlayout(){
 
 $(document).bind('ready', loadlayout());
 $(window).resize(loadlayout);
+

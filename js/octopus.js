@@ -80,10 +80,12 @@ var Octopus = function() {
       dataType: 'jsonp',
       success: function(response) {
        var asticleList = response[1];
+       var asticlePhraseList = response[2];
        for (var i = 0; i < asticleList.length; i++) {
          var articleStr = asticleList[i];
+         var phrase = asticlePhraseList[i];
          var url = 'https://en.wikipedia.org/wiki/' + articleStr;
-         self.wikiList.push('<a href="' + url + '" class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">book</i> - ' + articleStr + '</a><div class="android-drawer-separator"></div>');
+         self.wikiList.push('<a href="' + url + '" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" style="padding: 5px 5px;width:100%"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon" style="color: white;">find_in_page</i> - ' + articleStr + '</a><p class="mdl-card__supporting-text">' + phrase + '</p><div class="android-drawer-separator"></div>');
        }
       }
     }).error(function(e){
@@ -98,7 +100,7 @@ var Octopus = function() {
       var docsArray = data.response.docs;
       for (doc in docsArray) {
         var article = docsArray[doc];
-        self.nyTimesList.push('<a href="' + article.web_url + '" class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">line_style</i> - ' + article.headline.main + '</a><p class="mdl-card__supporting-text">' + article.snippet + '</p><div class="android-drawer-separator"></div>');
+        self.nyTimesList.push('<a href="' + article.web_url + '" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" style="padding: 5px 5px;"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon" style="color: white;">line_style</i> - ' + article.headline.main + '</a><p class="mdl-card__supporting-text">' + article.snippet + '</p><div class="android-drawer-separator"></div>');
   		}
     }).error(function(e){
       self.nyTimesList.push('<a class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;">Relevant NY-Times Links could not be loaded</a>');
@@ -144,7 +146,7 @@ var Octopus = function() {
       'success' : function(data, textStats, XMLHttpRequest) {
         var businesses = data.businesses
         for (business in businesses) {
-          self.yelpList.push('<a href="' + businesses[business].url + '" class="mdl-navigation__link fix-pading-menu" style="padding: 5px 5px;"><span class="mdl-list__item-primary-content"><div class="material-icons mdl-badge mdl-badge--overlap" data-badge="' + businesses[business].rating + '">start_rate</div><br>' + businesses[business].name + '</a><p class="mdl-card__supporting-text">' + businesses[business].snippet_text + '</p><div class="android-drawer-separator"></div>');
+          self.yelpList.push('<a href="' + businesses[business].url + '" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" style="padding: 5px 5px; width:100%;"><i class="material-icons mdl-list__item-icon" style="color: white;">filter_tilt_shift</i> - ' + businesses[business].name + '</a><div class="material-icons mdl-badge mdl-badge--overlap" data-badge="' + businesses[business].rating + '" style="width: 30px;float: right;">start_rate</div><p class="mdl-card__supporting-text">' + businesses[business].snippet_text + '</p><div class="android-drawer-separator"></div>');
     		}
       }
     });
@@ -159,9 +161,11 @@ var Octopus = function() {
       format: 'json'
     }).done(function( data ) {
       $.each( data.items, function( i, item ) {
-        var img = '<div class="demo-card-image mdl-card mdl-shadow--2dp" style="background: url("' + item.media.m + '") center / cover;"><div class="mdl-card__title mdl-card--expand">';
-        img = img + '</div><div class="mdl-card__actions"><span class="demo-card-image__filename">' + self.currentInfo().name + '</span></div></div>';
+        var img = '<div class="demo-card-image mdl-card mdl-shadow--2dp" style="width: 230px;margin-left: 5px;">';
+        img = img + '<img src="' + item.media.m + '" class="img-flickr"><div class="mdl-card__actions"><a href="' + item.link + '" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" style="width:100%;padding: 0;"><i class="material-icons mdl-list__item-icon" style="color: white;">collections</i> - ' + item.title + '</a></div></div>';
         self.flickrList.push(img);
+        if(i === 9)
+          return false;
       });
     });
   }
@@ -247,7 +251,7 @@ function createMapMarker(placeData) {
     vM.viewModel.addedList.push(newPlace);
     vM.viewModel.showToast(name + ' added to list');
     var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + formattedAddress + '';
-    infoWindow.setContent('<h3>' + name + '</h3><h4>' + formattedAddress + '</h4><br><center><img class="street-view-img" src="' + streetviewUrl + '"><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Show info</button></center>');
+    infoWindow.setContent('<h3>' + name + '</h3><h4>' + formattedAddress + '</h4><br><center><img class="street-view-img" src="' + streetviewUrl + '"><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility</i> - Show info</button></center>');
     infoWindow.open(map, marker);
     $('#more-info').click(function() {
       $(this).text(function(i, text){
@@ -298,7 +302,7 @@ function createMapMarker(placeData) {
     else
       textButton = 'Show info';
 
-    contentString = contentString + '<br><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect">' + textButton + '</button></center>';
+    contentString = contentString + '<br><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility</i> - ' + textButton + '</button></center>';
 
 
     infoWindow.setContent(contentString);
@@ -364,6 +368,7 @@ function loadlayout(){
   var resizeH = $( window ).innerHeight() - $('.android-header').height();
   resizeH += 'px';
   $('#mapDiv').css('height',resizeH);
+  $('#contest').css('height',resizeH);
 
   function sendNewPlace(){
     vM.viewModel.newPlaceFlag = true;

@@ -334,3 +334,46 @@ span {
     display: block;
     width: 100%;
 }
+
+.img-sidebar {
+  position: absolute;
+  right: -10px;
+  top: -7px;
+  width: 100%;
+}
+
+.img-flickr {
+  width: 100%;
+  padding: 0;
+}
+.demo-card-image > .mdl-card__actions {
+  height: 52px;
+  padding: 16px;
+  background: #fff;
+}
+
+.header {
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    background-color: white;
+    width: 100%;
+}
+
+.container {
+    position:relative;
+}
+
+.cont_elements {
+  overflow-y: scroll;
+  height: 100%;
+  margin-top: 50px;
+}
+
+.element {
+    position: relative;
+}
+
+.pading-menu {
+  padding: 5px 5px;
+}

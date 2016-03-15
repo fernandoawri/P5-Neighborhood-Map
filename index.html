@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.min.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/style.css">
-
   </head>
   <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -20,7 +19,6 @@
         <div class="mdl-layout__header-row">
           <span class="android-title mdl-layout-title">
           </span>
-          <!-- Add spacer, to align navigation to the right in desktop -->
           <div class="android-header-spacer mdl-layout-spacer"></div>
           <div id="main-search" class="android-search-box mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right mdl-textfield--full-width">
             <label class="mdl-button mdl-js-button mdl-button--icon" for="search-field">
@@ -30,7 +28,6 @@
               <input class="mdl-textfield__input" type="text" id="search-field">
             </div>
           </div>
-          <!-- Navigation -->
           <div class="android-navigation-container">
             <nav class="android-navigation mdl-navigation">
               <h2 id="title-search">Search a city in PA</h2>
@@ -43,12 +40,9 @@
           </button>
         </div>
       </div>
-
       <div class="android-drawer mdl-layout__drawer" id="menu-principal">
         <center  id="filter-title">
-          <span class="mdl-layout-title" style="color: white; padding: 5px 5px;">
-            Filter by<br>
-          </span>
+          <span class="mdl-layout-title" style="color: white; padding: 5px 5px;">Filter by<br></span>
           <div id="menu-filter" class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
             <label class="mdl-button mdl-js-button mdl-button--icon" for="filter-input">
               <i class="material-icons">search</i>
@@ -61,18 +55,18 @@
         </center>
         <div class="android-drawer-separator"></div>
         <nav class="mdl-navigation" >
-          <span class="mdl-navigation__link" href="">Sport Centers</span>
+          <span class="mdl-navigation__link" href="" style="padding: 0px 45px;">Cities of PA</span>
           <div data-bind="foreach: centers">
-            <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name)" style="padding: 5px 5px;">
+            <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name)" style="padding: 8px 8px;">
               <span class="mdl-list__item-primary-content">
               <i class="material-icons mdl-list__item-icon">location_on</i>
               <span data-bind="text: $data.name">
             </a>
           </div>
           <div class="android-drawer-separator"></div>
-          <span class="mdl-navigation__link" href="">Added</span>
+          <span class="mdl-navigation__link" href="" style="padding: 0px 45px;">Added</span>
           <div id="added-places" data-bind="foreach: addedList">
-            <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name)" style="padding: 5px 5px;">
+            <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name)" style="padding: 8px 8px;">
               <span class="mdl-list__item-primary-content">
               <i class="material-icons mdl-list__item-icon">location_on</i>
               <span data-bind="text: $data.name">
@@ -80,34 +74,48 @@
           </div>
         </nav>
       </div>
-
       <div class="android-content mdl-layout__content">
         <div id="mapDiv"></div>
         <div id="righ-sidebar" class="android-drawer mdl-layout__drawer_right">
-          <center><button id="more-info-sidebar" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect" style="width:100%;">Hide info</button></center>
-          <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
-            <div class="mdl-tabs__tab-bar">
-                <a href="#starks-panel" class="mdl-tabs__tab is-active" style="background-color:red;color:white">YELP</a>
-                <a href="#lannisters-panel" class="mdl-tabs__tab" style="background-color:black;color:white">NYT</a>
-                <a href="#targaryens-panel" class="mdl-tabs__tab" style="background-color:grey;color:white">Wiki</a>
+          <div class="container" >
+            <div class="header">
+              <button id="more-info-sidebar" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width:100%;"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility_off</i> - Hide info</button>
             </div>
-            <div class="mdl-tabs__panel is-active" id="starks-panel">
-              <nav class="mdl-navigation" >
+            <div class="cont_elements">
+                <div class="element" style="margin-top: -49px;"><br><br></div>
+            </div>
+          </div>
+          <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect container" id="contest">
+            <div class="mdl-tabs__tab-bar fix-tabs header">
+                <a href="#yelp-panel" class="mdl-tabs__tab is-active"><img src="images/yelp-icon.png" alt="Yelp Info" class="img-sidebar"></a>
+                <a href="#nyt-panel" class="mdl-tabs__tab"><img src="images/nyt-icon.png" alt="NYT Info" class="img-sidebar"></a>
+                <a href="#wiki-panel" class="mdl-tabs__tab"><img src="images/wiki-icon.png" alt="Wiki Info" class="img-sidebar"></a>
+                <a href="#flickr-panel" class="mdl-tabs__tab"><img src="images/Flickr-icon.png" alt="Flickr Images" class="img-sidebar"></a>
+            </div>
+            <div class="mdl-tabs__panel is-active cont_elements" id="yelp-panel">
+              <nav class="mdl-navigation element" >
                 <div data-bind="foreach: yelpList">
-                    <span data-bind="html: $data"></span>
+                    <span data-bind="html: $data" style="padding: 0;"></span>
                 </div>
               </nav>
             </div>
-            <div class="mdl-tabs__panel" id="lannisters-panel">
+            <div class="mdl-tabs__panel cont_elements" id="nyt-panel">
               <nav class="mdl-navigation" >
                 <div data-bind="foreach: nyTimesList">
-                    <span data-bind="html: $data"></span>
+                    <span data-bind="html: $data" style="padding: 0;"></span>
                 </div>
               </nav>
             </div>
-            <div class="mdl-tabs__panel" id="targaryens-panel">
+            <div class="mdl-tabs__panel cont_elements" id="wiki-panel">
               <nav class="mdl-navigation" >
                 <div data-bind="foreach: wikiList">
+                    <span data-bind="html: $data" style="padding: 0;"></span>
+                </div>
+              </nav>
+            </div>
+            <div class="mdl-tabs__panel cont_elements" id="flickr-panel">
+              <nav class="mdl-navigation" >
+                <div data-bind="foreach: flickrList">
                     <span data-bind="html: $data"></span>
                 </div>
               </nav>

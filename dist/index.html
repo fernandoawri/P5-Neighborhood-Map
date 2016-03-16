@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Introducing Lollipop, a sweet new take on Android.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>P5--Neighborhood Map</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Serif'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <div class="android-header mdl-layout__header mdl-layout__header--waterfall">
+        <div class="mdl-layout__header-row">
+          <span class="android-title mdl-layout-title">
+          </span>
+          <div class="android-header-spacer mdl-layout-spacer"></div>
+          <div id="main-search" class="android-search-box mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right mdl-textfield--full-width">
+            <label class="mdl-button mdl-js-button mdl-button--icon" for="search-field">
+              <i class="material-icons">search</i>
+            </label>
+            <div class="mdl-textfield__expandable-holder">
+              <input class="mdl-textfield__input" type="text" id="search-field">
+            </div>
+          </div>
+          <div class="android-navigation-container">
+            <nav class="android-navigation mdl-navigation">
+              <h2 id="title-search">Search a city in PA</h2>
+            </nav>
+          </div>
+          <span class="android-mobile-title mdl-layout-title">
+          </span>
+          <button class="android-more-button mdl-button mdl-js-button mdl-button--icon mdl-button--fab mdl-js-ripple-effect" id="button-show-toast">
+            <div id="tt2" class="icon material-icons">add</div>
+          </button>
+        </div>
+      </div>
+      <div class="android-drawer mdl-layout__drawer" id="menu-principal">
+        <center  id="filter-title">
+          <span class="mdl-layout-title" style="color: white; padding: 5px 5px;">Filter by<br></span>
+          <div id="menu-filter" class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+            <label class="mdl-button mdl-js-button mdl-button--icon" for="filter-input">
+              <i class="material-icons">search</i>
+            </label>
+            <div class="mdl-textfield__expandable-holder">
+              <input class="mdl-textfield__input" type="text" id="filter-input">
+              <label class="mdl-textfield__label" for="sample-expandable">Filter by</label>
+            </div>
+          </div>
+        </center>
+        <div class="android-drawer-separator"></div>
+        <nav class="mdl-navigation" >
+          <span class="mdl-navigation__link" href="" style="padding: 0px 45px;">Cities of PA</span>
+          <div data-bind="foreach: centers">
+            <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name)" style="padding: 8px 8px;">
+              <span class="mdl-list__item-primary-content">
+              <i class="material-icons mdl-list__item-icon">location_on</i>
+              <span data-bind="text: $data.name">
+            </a>
+          </div>
+          <div class="android-drawer-separator"></div>
+          <span class="mdl-navigation__link" href="" style="padding: 0px 45px;">Added</span>
+          <div id="added-places" data-bind="foreach: addedList">
+            <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name)" style="padding: 8px 8px;">
+              <span class="mdl-list__item-primary-content">
+              <i class="material-icons mdl-list__item-icon">location_on</i>
+              <span data-bind="text: $data.name">
+            </a>
+          </div>
+        </nav>
+      </div>
+      <div class="android-content mdl-layout__content">
+        <div id="mapDiv"></div>
+        <div id="righ-sidebar" class="android-drawer mdl-layout__drawer_right">
+          <div class="container" >
+            <div class="header">
+              <button id="more-info-sidebar" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width:100%;"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility_off</i> - Hide info</button>
+            </div>
+            <div class="cont_elements">
+                <div class="element" style="margin-top: -49px;"><br><br></div>
+            </div>
+          </div>
+          <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect container" id="contest">
+            <div class="mdl-tabs__tab-bar fix-tabs header">
+                <a href="#yelp-panel" class="mdl-tabs__tab is-active"><img src="images/yelp-icon.png" alt="Yelp Info" class="img-sidebar"></a>
+                <a href="#nyt-panel" class="mdl-tabs__tab"><img src="images/nyt-icon.png" alt="NYT Info" class="img-sidebar"></a>
+                <a href="#wiki-panel" class="mdl-tabs__tab"><img src="images/wiki-icon.png" alt="Wiki Info" class="img-sidebar"></a>
+                <a href="#flickr-panel" class="mdl-tabs__tab"><img src="images/Flickr-icon.png" alt="Flickr Images" class="img-sidebar"></a>
+            </div>
+            <div class="mdl-tabs__panel is-active cont_elements" id="yelp-panel">
+              <nav class="mdl-navigation element" >
+                <div data-bind="foreach: yelpList">
+                    <span data-bind="html: $data" style="padding: 0;"></span>
+                </div>
+              </nav>
+            </div>
+            <div class="mdl-tabs__panel cont_elements" id="nyt-panel">
+              <nav class="mdl-navigation" >
+                <div data-bind="foreach: nyTimesList">
+                    <span data-bind="html: $data" style="padding: 0;"></span>
+                </div>
+              </nav>
+            </div>
+            <div class="mdl-tabs__panel cont_elements" id="wiki-panel">
+              <nav class="mdl-navigation" >
+                <div data-bind="foreach: wikiList">
+                    <span data-bind="html: $data" style="padding: 0;"></span>
+                </div>
+              </nav>
+            </div>
+            <div class="mdl-tabs__panel cont_elements" id="flickr-panel">
+              <nav class="mdl-navigation" >
+                <div data-bind="foreach: flickrList">
+                    <span data-bind="html: $data"></span>
+                </div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="toast-map-message" class="mdl-js-snackbar mdl-snackbar">
+      <div class="mdl-snackbar__text"></div>
+      <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+    <script src="js/knockout-3.4.0.js"></script>
+    <script src="js/jQuery.js"></script>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script async src="https://code.getmdl.io/1.1.1/material.min.js"></script>
+    <script async src="http://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDRtqNO8N2dY-v4dL3WTlbqyU0iBq-MpiE"></script>
+    <script src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+    <script src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
+    <script async src="js/model.js"></script>
+    <script async src="js/octopus.js"></script>
+    <script async src="js/view.js"></script>
+  </body>
+</html>

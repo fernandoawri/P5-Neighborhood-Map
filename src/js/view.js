@@ -20,6 +20,7 @@ function pinPoster(locations) {
     };
     service.textSearch(request, callback);
   }
+  vM.viewModel.dbLoaded = false;
 }
 //initializeMap is called when the app is lunched
 function initializeMap() {
@@ -59,13 +60,17 @@ function createMapMarker(placeData) {
       'location' : formattedAddress
     }
     vM.viewModel.addedList.push(newPlace);
+    var addedfromDB = false;
     if(vM.viewModel.dbLoaded === false){
-      updatedFirebase();
+      vM.viewModel.updatedFirebase();
+      addedfromDB = true;
     }
     vM.viewModel.showToast(name + ' added to list');
     var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + formattedAddress + '';
     infoWindow.setContent('<h3>' + name + '</h3><h4>' + formattedAddress + '</h4><br><center><img class="street-view-img" src="' + streetviewUrl + '"><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility</i> - Show info</button></center>');
-    infoWindow.open(map, marker);
+    if(addedfromDB === false){
+      infoWindow.open(map, marker);
+    }
     $('#more-info').click(function() {
       $(this).text(function(i, text){
           return text === 'Hide info' ? 'Show info' : 'Hide info';
@@ -139,8 +144,6 @@ window.addEventListener('resize', function(e) {
 var googleMap = '<div id="map"></div>';
 $('#mapDiv').append(googleMap);
 //this function is called when the document is ready and everytime the window is resized
-
-var myDataRef = new Firebase('https://glaring-fire-483.firebaseio.com/');
 function loadlayout(){
   $('#filter-title').click(function() {
     $('#menu-filter').addClass('is-focused');
@@ -193,7 +196,7 @@ function loadlayout(){
     })
     $('#righ-sidebar').toggleClass('is-visible');
   });
-  loadFirebase();
+  vM.viewModel.loadFirebase();
 };
 //loadlayout is called when the document is ready and everytime the window is resized
 //$(document).bind('ready', );
@@ -201,21 +204,3 @@ $(window).resize(loadlayout);
 $( document ).ready(function() {
   loadlayout();
 });
-
-function updatedFirebase() {
-  myDataRef.on('value', function(db) {
-  	myDataRef.child('addedPlacesList').set(vM.viewModel.addedList());
-  });
-}
-function loadFirebase() {
-  myDataRef.on('value', function(db) {
-    var dataExist = db.exists();
-  	if(dataExist){
-      vM.viewModel.dbLoaded = true;
-      var addedDbList = db.val();
-      var addedPlacesList = addedDbList.addedPlacesList;
-      vM.viewModel.loadFromFirebase(addedPlacesList);
-      vM.viewModel.dbLoaded = false;
-  	}
-  });
-}

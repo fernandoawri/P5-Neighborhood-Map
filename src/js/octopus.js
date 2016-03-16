@@ -14,6 +14,8 @@ var Octopus = function() {
   self.filterFlag = false;//this flag is to check if the user is filtering some values
   self.filtered = false;//this flag is to check if the list has been filtered
   self.dbLoaded = false;//this flag is to check if the list has been filtered
+  self.LoadedComplete = false;//this flag is to check if the list has been filtered
+  self.myDataRef = new Firebase('https://glaring-fire-483.firebaseio.com/');
 
   //This method shows the Toast that display the message if a new city was added to the addedList
   self.showToast = function (text){
@@ -46,10 +48,30 @@ var Octopus = function() {
     $('#search-field').val('');
     $('#main-search').removeClass('is-dirty');
   };
+  //this method loads the added markers from firebase
   self.loadFromFirebase = function (addedDBList){
     this.newPlaceFlag = true;
     pinPoster(addedDBList);
   };
+  //this method updates the addedlist on firebase
+  self.updatedFirebase = function () {
+    self.myDataRef.on('value', function(db) {
+    	self.myDataRef.child('addedPlacesList').set(vM.viewModel.addedList());
+    });
+  }
+  //this method loads the infor from firebase
+  self.loadFirebase = function () {
+    self.myDataRef.on('value', function(db) {
+      var dataExist = db.exists();
+    	if(dataExist && self.LoadedComplete === false){
+        self.dbLoaded = true;
+        var addedDbList = db.val();
+        var addedPlacesList = addedDbList.addedPlacesList;
+        self.loadFromFirebase(addedPlacesList);
+    	}
+      self.LoadedComplete = true;
+    });
+  }
   //this method is called when the user is start typing into the filter input
   // and updates the list on the screen
   self.updateList = function (text, centers){

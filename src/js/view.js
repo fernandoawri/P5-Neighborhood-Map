@@ -20,7 +20,6 @@ function pinPoster(locations) {
     };
     service.textSearch(request, callback);
   }
-  vM.viewModel.dbLoaded = false;
 }
 //initializeMap is called when the app is lunched
 function initializeMap() {
@@ -54,17 +53,26 @@ function createMapMarker(placeData) {
     title: name
   });
   vM.viewModel.markers.push(marker);
-  if(vM.viewModel.newPlaceFlag){
+  var newPlaceFromDB = false;
+  for(item in vM.viewModel.addedPlacesList){
+    var newPlace = vM.viewModel.addedPlacesList[item];
+    if(marker.title === newPlace.name){
+      newPlaceFromDB = true;
+    }
+  }
+  console.log(vM.viewModel.addedPlacesList);
+  if(vM.viewModel.newFrom === 'APP' || (vM.viewModel.newFrom === 'FIREBASE' && newPlaceFromDB)){
     var newPlace = {
       'name' : name,
       'location' : formattedAddress
     }
     vM.viewModel.addedList.push(newPlace);
-    var addedfromDB = false;
+    var addedfromDB = true;
     if(vM.viewModel.dbLoaded === false){
       vM.viewModel.updatedFirebase();
-      addedfromDB = true;
+      addedfromDB = false;
     }
+
     vM.viewModel.showToast(name + ' added to list');
     var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + formattedAddress + '';
     infoWindow.setContent('<h3>' + name + '</h3><h4>' + formattedAddress + '</h4><br><center><img class="street-view-img" src="' + streetviewUrl + '"><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility</i> - Show info</button></center>');
@@ -77,7 +85,10 @@ function createMapMarker(placeData) {
       })
       $('#righ-sidebar').toggleClass('is-visible');
     });
-    vM.viewModel.newPlaceFlag = false;
+    if(vM.viewModel.newFrom === 'APP'){
+      vM.viewModel.newFrom = 'NULL';
+    }
+
     vM.viewModel.currentInfo(newPlace);
     vM.viewModel.loadInfoSelected();
   }

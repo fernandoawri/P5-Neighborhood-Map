@@ -15,7 +15,9 @@ var Octopus = function() {
   self.filtered = false;//this flag is to check if the list has been filtered
   self.dbLoaded = false;//this flag is to check if the list has been filtered
   self.LoadedComplete = false;//this flag is to check if the list has been filtered
-  self.myDataRef = new Firebase('https://glaring-fire-483.firebaseio.com/');
+  self.newFrom = 'NULL';
+  self.addedPlacesList = [];
+  self.myDataRef = new Firebase('https://glaring-fire-483.firebaseio.com/');//connection to Firebase
 
   //This method shows the Toast that display the message if a new city was added to the addedList
   self.showToast = function (text){
@@ -39,18 +41,22 @@ var Octopus = function() {
   }
   //this method sends the city from the search input to add a new place
   self.sendNewPlace = function (){
-    this.newPlaceFlag = true;
+    self.newPlaceFlag = true;
+    self.dbLoaded = false;
+    self.newFrom = 'APP';
     var newPlace = {
       'name' : $('#search-field').val(),
       'location' : $('#search-field').val() + ', PA'
     }
     pinPoster([newPlace]);
+    self.newPlaceFlag = false;
     $('#search-field').val('');
     $('#main-search').removeClass('is-dirty');
   };
   //this method loads the added markers from firebase
   self.loadFromFirebase = function (addedDBList){
-    this.newPlaceFlag = true;
+    self.newPlaceFlag = true;
+    self.newFrom = 'FIREBASE';
     pinPoster(addedDBList);
   };
   //this method updates the addedlist on firebase
@@ -64,10 +70,11 @@ var Octopus = function() {
     self.myDataRef.on('value', function(db) {
       var dataExist = db.exists();
     	if(dataExist && self.LoadedComplete === false){
+        self.newFrom = 'NULL';
         self.dbLoaded = true;
         var addedDbList = db.val();
-        var addedPlacesList = addedDbList.addedPlacesList;
-        self.loadFromFirebase(addedPlacesList);
+        self.addedPlacesList = addedDbList.addedPlacesList;
+        self.loadFromFirebase(self.addedPlacesList);
     	}
       self.LoadedComplete = true;
     });

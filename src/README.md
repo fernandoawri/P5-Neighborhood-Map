@@ -13,7 +13,7 @@ Inside project P5-Neighborhood-Map/src there are 3 folders css, images & js also
 Once you lunched the P5-Neighborhood-Map game in the browser, you can Click the menu button and you will see in the left side the preloaded Cities that you can click and see their information.
 A City clicked will be displayed on the map with a marker.
 
-![P5-Neighborhood-Map](https://github.com/fernandoawri/P3---Classic-Arcade-Game/blob/master/images/readme.JPG)
+![P5-Neighborhood-Map](https://github.com/fernandoawri/P5-Neighborhood-Map/blob/master/src/images/preview.png)
 
 ### What you can do
 1. Search a new city and see its information.

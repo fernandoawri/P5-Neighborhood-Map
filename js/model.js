@@ -1,9 +1,8 @@
-
 var model = {
 	'centers' : [
 		{
-			'name' : 'Harrisburg',
-			'location' : 'Harrisburg, PA'
+			'name' : 'Lancaster',
+			'location' : 'Lancaster, PA'
 		},
 		{
 			'name' : 'Hershey',
@@ -31,10 +30,5 @@ var model = {
 			'name' : 'Gettysburg',
 			'location' : 'Gettysburg, PA'
 		}
-		,
-		{
-			'name' : 'Erie',
-			'location' : 'Erie, PA'
-		}
 	]
-}
+};

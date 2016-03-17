@@ -10,19 +10,18 @@ var Octopus = function () {
   self.backUp = ko.observableArray();//this array keeps all the models that are hidden while filtering the links
   self.currentInfo = ko.observable();//this object keeps the information for the selected Marker or link
   self.addedList = ko.observableArray();//this array keeps all new locations added to the map
-  self.searchField = ko.observable("");
-  self.filterInput = ko.observable("");
-  self.isFilterSelected = ko.observable(false);
-  self.isSearchSelected = ko.observable(false);
+  self.searchField = ko.observable("");//this object keeps the value in the search input
+  self.filterInput = ko.observable("");//this object keeps the value in the filter input
+  self.isFilterSelected = ko.observable(false);////this object keeps the focus in the search input
+  self.isSearchSelected = ko.observable(false);//this object keeps the focus in the filter input
   self.newPlaceFlag = false;//this flag is to check if a new location was entered on the search input
   self.filterFlag = false;//this flag is to check if the user is filtering some values
   self.filtered = false;//this flag is to check if the list has been filtered
   self.dbLoaded = false;//this flag is to check if the list has been filtered
   self.LoadedComplete = false;//this flag is to check if the list has been filtered
-  self.newFrom = 'NULL';
-  self.addedPlacesList = [];
+  self.newFrom = 'NULL';//this is an object to check from where is creating the new place on map
+  self.addedPlacesList = [];//this arrayKeeps a list of places coming from Firebase
   self.myDataRef = new Firebase('https://glaring-fire-483.firebaseio.com/');//connection to Firebase
-
   //This method shows the Toast that display the message if a new city was added to the addedList
   self.showToast = function (text){
     'use strict';
@@ -57,17 +56,7 @@ var Octopus = function () {
       self.showToast('Type a place');
     }
   };
-  //This method is called when the user push enter to search a new place
-  self.onEnter = function(d,e){
-      if(e.keyCode === 13){
-        self.searchNewPlace();
-      }
-  };
-  self.onEnter = function(d,e){
-      if(e.keyCode === 13){
-        self.searchNewPlace();
-      }
-  };
+  //this methos is used to set the right size for the map on the div after the body is loaded
   self.onLoadBody = function (){
     var resizeH = $( window ).innerHeight() - $('.android-header').height();
     var sidebarHeigh = resizeH - 100;
@@ -75,6 +64,7 @@ var Octopus = function () {
     sidebarHeigh += 'px';
     $('#mapDiv').css('height',resizeH);
     $('#contest').css('height',sidebarHeigh);
+    //I tried to implement this function throght knockoutjs but I couldn't :(
     $('#search-field').keypress(function(e) {
       var key = e.which;
       if(key == 13) {
@@ -83,9 +73,11 @@ var Octopus = function () {
     });
     self.loadFirebase();
   };
+  //this function set the focus into the filter input
   self.setIsFilterSelected = function() {
     self.isFilterSelected(true);
   };
+  //this function set the focus into the search input
   self.setIsSearchSelected = function() {
     self.isSearchSelected(true);
   };

@@ -2,6 +2,9 @@
 var map;//this object keeps the map
 var infoWindow;//this object keeps the infoWindow
 var service;//this object keeps the google PlacesService results
+var modelName;//this object is used to keep the name of a city
+var streetviewUrl;//keeps the url for google streetview
+var newPlace;//keeps the new place information to create a new marker
 
 //when service.textSearch is called the callback will handle the results
 function callback(results, status) {
@@ -55,17 +58,16 @@ function createMapMarker(placeData) {
   vM.viewModel.markers.push(marker);
   var newPlaceFromDB = false;
   for(item in vM.viewModel.addedPlacesList){
-    var newPlace = vM.viewModel.addedPlacesList[item];
+    newPlace = vM.viewModel.addedPlacesList[item];
     if(marker.title === newPlace.name){
       newPlaceFromDB = true;
     }
   }
-  console.log(vM.viewModel.addedPlacesList);
   if(vM.viewModel.newFrom === 'APP' || (vM.viewModel.newFrom === 'FIREBASE' && newPlaceFromDB)){
     var newPlace = {
       'name' : name,
       'location' : formattedAddress
-    }
+    };
     vM.viewModel.addedList.push(newPlace);
     var addedfromDB = true;
     if(vM.viewModel.dbLoaded === false){
@@ -82,7 +84,7 @@ function createMapMarker(placeData) {
     $('#more-info').click(function() {
       $(this).text(function(i, text){
           return text === 'Hide info' ? 'Show info' : 'Hide info';
-      })
+      });
       $('#righ-sidebar').toggleClass('is-visible');
     });
     if(vM.viewModel.newFrom === 'APP'){
@@ -102,19 +104,19 @@ function createMapMarker(placeData) {
     var contentString = '';
     var findMarker = true;
     for(center in vM.viewModel.addedList()){
-      var modelName = vM.viewModel.addedList()[center].name;
+      modelName = vM.viewModel.addedList()[center].name;
       if(modelName === name){
         findMarker = false;
-        var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + vM.viewModel.addedList()[center].location + '';
+        streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + vM.viewModel.addedList()[center].location + '';
         contentString = '<h3>' + vM.viewModel.addedList()[center].name + '</h3><h4>' + vM.viewModel.addedList()[center].location + '</h4><center><img class="street-view-img" src="' + streetviewUrl + '">';
         vM.viewModel.currentInfo(vM.viewModel.addedList()[center]);
       }
     }
     if(findMarker){
       for(center in vM.viewModel.centers()){
-        var modelName = vM.viewModel.centers()[center].name;
+        modelName = vM.viewModel.centers()[center].name;
         if(modelName === name){
-          var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + vM.viewModel.centers()[center].location + '';
+          streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + vM.viewModel.centers()[center].location + '';
           contentString = '<h3>' + vM.viewModel.centers()[center].name + '</h3><h4>' + vM.viewModel.centers()[center].location + '</h4><center><img class="street-view-img" src="' + streetviewUrl + '">';
           vM.viewModel.currentInfo(vM.viewModel.centers()[center]);
         }
@@ -122,10 +124,12 @@ function createMapMarker(placeData) {
     }
     vM.viewModel.loadInfoSelected();
     var textButton;
-    if($('#more-info').text() === 'Hide info')
+    if($('#more-info').text() === 'Hide info'){
       textButton = 'Hide info';
-    else
+    }
+    else{
       textButton = 'Show info';
+    }
 
     contentString = contentString + '<br><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility</i> - ' + textButton + '</button></center>';
     infoWindow.setContent(contentString);
@@ -136,7 +140,7 @@ function createMapMarker(placeData) {
     $('#more-info').click(function() {
       $(this).text(function(i, text){
         return text === 'Hide info' ? 'Show info' : 'Hide info';
-      })
+      });
       $('#righ-sidebar').toggleClass('is-visible');
     });
   });
@@ -177,7 +181,7 @@ function loadlayout(){
     }
   });
   document.querySelector('#button-show-toast').addEventListener('click', function() {
-    if ($('#search-field').val() != null && $('#search-field').val() != '') {
+    if ($('#search-field').val() !== null && $('#search-field').val() !== '') {
       vM.viewModel.sendNewPlace();
     }
     else {
@@ -185,7 +189,7 @@ function loadlayout(){
     }
   });
   $("#filter-input").bind("keyup", function() {
-    if ($(this).val() != null && $(this).val() != '') {
+    if ($(this).val() !== null && $(this).val() !== '') {
       vM.viewModel.filterFlag = true;
       vM.viewModel.clearMarkers();
       var text = $(this).val().toLowerCase();
@@ -204,11 +208,11 @@ function loadlayout(){
   $('#more-info-sidebar').click(function() {
     $('#more-info').text(function(i, text){
         return text === 'Hide info' ? 'Show info' : 'Hide info';
-    })
+    });
     $('#righ-sidebar').toggleClass('is-visible');
   });
   vM.viewModel.loadFirebase();
-};
+}
 //loadlayout is called when the document is ready and everytime the window is resized
 //$(document).bind('ready', );
 $(window).resize(loadlayout);

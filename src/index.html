@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>P5--Neighborhood Map</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
-    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Serif'>
+    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700%7CDroid+Serif'>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.min.css">
     <link rel="stylesheet" href="styles.css">
@@ -35,41 +35,41 @@
           </div>
           <span class="android-mobile-title mdl-layout-title">
           </span>
-          <button class="android-more-button mdl-button mdl-js-button mdl-button--icon mdl-button--fab mdl-js-ripple-effect" id="button-show-toast">
+          <a class="android-more-button mdl-button mdl-js-button mdl-button--icon mdl-button--fab mdl-js-ripple-effect" id="button-show-toast">
             <div id="tt2" class="icon material-icons">add</div>
-          </button>
+          </a>
         </div>
       </div>
       <div class="android-drawer mdl-layout__drawer" id="menu-principal">
-        <center  id="filter-title">
-          <span class="mdl-layout-title" style="color: white; padding: 5px 5px;">Filter by<br></span>
+          <span id="filter-title" class="mdl-layout-title" style="color: white; padding: 5px 5px;">Filter by<br></span>
           <div id="menu-filter" class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
             <label class="mdl-button mdl-js-button mdl-button--icon" for="filter-input">
               <i class="material-icons">search</i>
             </label>
             <div class="mdl-textfield__expandable-holder">
               <input class="mdl-textfield__input" type="text" id="filter-input">
-              <label class="mdl-textfield__label" for="sample-expandable">Filter by</label>
+              <label class="mdl-textfield__label" for="filter-input">Filter by</label>
             </div>
           </div>
-        </center>
         <div class="android-drawer-separator"></div>
         <nav class="mdl-navigation" >
-          <span class="mdl-navigation__link" href="" style="padding: 0px 45px;">Cities of PA</span>
+          <span class="mdl-navigation__link" style="padding: 0px 45px;">Cities of PA</span>
           <div data-bind="foreach: centers">
             <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name)" style="padding: 8px 8px;">
               <span class="mdl-list__item-primary-content">
-              <i class="material-icons mdl-list__item-icon">location_on</i>
-              <span data-bind="text: $data.name">
+                <i class="material-icons mdl-list__item-icon">location_on</i>
+                <span data-bind="text: $data.name"></span>
+              </span>
             </a>
           </div>
           <div class="android-drawer-separator"></div>
-          <span class="mdl-navigation__link" href="" style="padding: 0px 45px;">Added</span>
+          <span class="mdl-navigation__link" style="padding: 0px 45px;">Added</span>
           <div id="added-places" data-bind="foreach: addedList">
             <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name)" style="padding: 8px 8px;">
               <span class="mdl-list__item-primary-content">
-              <i class="material-icons mdl-list__item-icon">location_on</i>
-              <span data-bind="text: $data.name">
+                <i class="material-icons mdl-list__item-icon">location_on</i>
+                <span data-bind="text: $data.name"></span>
+              </span>
             </a>
           </div>
         </nav>

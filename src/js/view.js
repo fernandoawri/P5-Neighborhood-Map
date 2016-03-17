@@ -148,7 +148,6 @@ function createMapMarker(placeData) {
   map.fitBounds(bounds);
   map.setCenter(bounds.getCenter());
 }
-
 //lunch the application when the window it's loaded
 window.addEventListener('load', initializeMap);
 //resize the map
@@ -158,64 +157,3 @@ window.addEventListener('resize', function(e) {
 //add map to the mapDiv
 var googleMap = '<div id="map"></div>';
 $('#mapDiv').append(googleMap);
-//this function is called when the document is ready and everytime the window is resized
-function loadlayout(){
-  $('#filter-title').click(function() {
-    $('#menu-filter').addClass('is-focused');
-    $("#filter-input").focus();
-  });
-  $('#title-search').click(function() {
-    $('#main-search').addClass('is-focused');
-    $('#search-field').focus();
-  });
-  var resizeH = $( window ).innerHeight() - $('.android-header').height();
-  var sidebarHeigh = resizeH - 100;
-  resizeH += 'px';
-  sidebarHeigh += 'px';
-  $('#mapDiv').css('height',resizeH);
-  $('#contest').css('height',sidebarHeigh);
-  $('#search-field').keypress(function(e) {
-    var key = e.which;
-    if(key == 13) {
-      vM.viewModel.sendNewPlace();
-    }
-  });
-  document.querySelector('#button-show-toast').addEventListener('click', function() {
-    if ($('#search-field').val() !== null && $('#search-field').val() !== '') {
-      vM.viewModel.sendNewPlace();
-    }
-    else {
-      vM.viewModel.showToast('Type a place');
-    }
-  });
-  $("#filter-input").bind("keyup", function() {
-    if ($(this).val() !== null && $(this).val() !== '') {
-      vM.viewModel.filterFlag = true;
-      vM.viewModel.clearMarkers();
-      var text = $(this).val().toLowerCase();
-      vM.viewModel.updateList(text);
-      vM.viewModel.showMarkers(map);
-      vM.viewModel.filterFlag = false;
-    }
-    else {
-      vM.viewModel.filterFlag = true;
-      vM.viewModel.restoreData();
-      vM.viewModel.showMarkers(map);
-      vM.viewModel.filterFlag = false;
-      vM.viewModel.filtered = false;
-    }
-  });
-  $('#more-info-sidebar').click(function() {
-    $('#more-info').text(function(i, text){
-        return text === 'Hide info' ? 'Show info' : 'Hide info';
-    });
-    $('#righ-sidebar').toggleClass('is-visible');
-  });
-  vM.viewModel.loadFirebase();
-}
-//loadlayout is called when the document is ready and everytime the window is resized
-//$(document).bind('ready', );
-$(window).resize(loadlayout);
-$( document ).ready(function() {
-  loadlayout();
-});

@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/style.css">
   </head>
-  <body>
+  <body data-bind="visible: onLoadBody() || true">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <div class="android-header mdl-layout__header mdl-layout__header--waterfall">
         <div class="mdl-layout__header-row">
@@ -25,17 +25,17 @@
               <i class="material-icons">search</i>
             </label>
             <div class="mdl-textfield__expandable-holder">
-              <input class="mdl-textfield__input" type="text" id="search-field">
+              <input class="mdl-textfield__input" type="text" id="search-field" data-bind="textInput: searchField, hasFocus: isSearchSelected">
             </div>
           </div>
           <div class="android-navigation-container">
             <nav class="android-navigation mdl-navigation">
-              <h2 id="title-search">Search a city in PA</h2>
+              <h2 id="title-search" data-bind="click: setIsSearchSelected">Search a city in PA</h2>
             </nav>
           </div>
           <span class="android-mobile-title mdl-layout-title">
           </span>
-          <a class="android-more-button mdl-button mdl-js-button mdl-button--icon mdl-button--fab mdl-js-ripple-effect" id="button-show-toast">
+          <a class="android-more-button mdl-button mdl-js-button mdl-button--icon mdl-button--fab mdl-js-ripple-effect" id="button-show-toast" data-bind="click: searchNewPlace">
             <div id="tt2" class="icon material-icons">add</div>
           </a>
         </div>
@@ -47,8 +47,8 @@
               <i class="material-icons">search</i>
             </label>
             <div class="mdl-textfield__expandable-holder">
-              <input class="mdl-textfield__input" type="text" id="filter-input">
-              <label class="mdl-textfield__label" for="filter-input">Filter by</label>
+              <input class="mdl-textfield__input" type="text" id="filter-input"  data-bind="textInput: filterInput, hasFocus: isFilterSelected">
+              <label class="mdl-textfield__label" for="filter-input" data-bind="click: setIsFilterSelected">Filter by</label>
             </div>
           </div>
         <div class="android-drawer-separator"></div>
@@ -79,7 +79,7 @@
         <div id="righ-sidebar" class="android-drawer mdl-layout__drawer_right">
           <div class="container" >
             <div class="header">
-              <button id="more-info-sidebar" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width:100%;"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility_off</i> - Hide info</button>
+              <a id="more-info-sidebar" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width:100%;" data-bind="click: showMoreInfo"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility_off</i> - Hide info</a>
             </div>
             <div class="cont_elements">
                 <div class="element" style="margin-top: -49px;"><br><br></div>
@@ -133,7 +133,7 @@
     <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
     <script async src="https://code.getmdl.io/1.1.1/material.min.js"></script>
     <script src="js/util.js"></script>
-    <script onError="mapErrors()" async src="http://maps.googfhfggleapis.com/maps/api/js?libraries=places&key=AIzaSyDRtqNO8N2dY-v4dL3WTlbqyU0iBq-MpiE"></script>
+    <script onError="mapErrors()" async src="http://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDRtqNO8N2dY-v4dL3WTlbqyU0iBq-MpiE"></script>
     <script src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
     <script src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
     <script async src="js/model.js"></script>

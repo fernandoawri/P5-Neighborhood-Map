@@ -10,6 +10,10 @@ var Octopus = function () {
   self.backUp = ko.observableArray();//this array keeps all the models that are hidden while filtering the links
   self.currentInfo = ko.observable();//this object keeps the information for the selected Marker or link
   self.addedList = ko.observableArray();//this array keeps all new locations added to the map
+  self.searchField = ko.observable("");
+  self.filterInput = ko.observable("");
+  self.isFilterSelected = ko.observable(false);
+  self.isSearchSelected = ko.observable(false);
   self.newPlaceFlag = false;//this flag is to check if a new location was entered on the search input
   self.filterFlag = false;//this flag is to check if the user is filtering some values
   self.filtered = false;//this flag is to check if the list has been filtered
@@ -25,6 +29,72 @@ var Octopus = function () {
     var snackbarContainer = document.querySelector('#toast-map-message');
     var data = {message: text};
     snackbarContainer.MaterialSnackbar.showSnackbar(data);
+  };
+  //This method gets the value on the filter input and filters the list on the menu
+  self.filterInput.subscribe(function(newValue) {
+    if (newValue !== null && newValue !== '') {
+      self.filterFlag = true;
+      self.clearMarkers();
+      var text = newValue.toLowerCase();
+      self.updateList(text);
+      self.showMarkers(map);
+      self.filterFlag = false;
+    }
+    else {
+      self.filterFlag = true;
+      self.restoreData();
+      self.showMarkers(map);
+      self.filterFlag = false;
+      self.filtered = false;
+    }
+  });
+  //This method is called when the user clicks the add button to search a new place
+  self.searchNewPlace = function (){
+    if (self.searchField() !== null && self.searchField() !== '') {
+      self.sendNewPlace();
+    }
+    else {
+      self.showToast('Type a place');
+    }
+  };
+  //This method is called when the user push enter to search a new place
+  self.onEnter = function(d,e){
+      if(e.keyCode === 13){
+        self.searchNewPlace();
+      }
+  };
+  self.onEnter = function(d,e){
+      if(e.keyCode === 13){
+        self.searchNewPlace();
+      }
+  };
+  self.onLoadBody = function (){
+    var resizeH = $( window ).innerHeight() - $('.android-header').height();
+    var sidebarHeigh = resizeH - 100;
+    resizeH += 'px';
+    sidebarHeigh += 'px';
+    $('#mapDiv').css('height',resizeH);
+    $('#contest').css('height',sidebarHeigh);
+    $('#search-field').keypress(function(e) {
+      var key = e.which;
+      if(key == 13) {
+        self.sendNewPlace();
+      }
+    });
+    self.loadFirebase();
+  };
+  self.setIsFilterSelected = function() {
+    self.isFilterSelected(true);
+  };
+  self.setIsSearchSelected = function() {
+    self.isSearchSelected(true);
+  };
+  //This methods displays the right sidebar
+  self.showMoreInfo = function (){
+    $('#more-info').text(function(i, text){
+        return text === 'Hide info' ? 'Show info' : 'Hide info';
+    });
+    $('#righ-sidebar').toggleClass('is-visible');
   };
   //this method actives the selected marker from the list
   self.viewMarker = function (nameMaker){
@@ -52,8 +122,9 @@ var Octopus = function () {
     };
     pinPoster([newPlace]);
     self.newPlaceFlag = false;
-    $('#search-field').val('');
+    self.searchField('');
     $('#main-search').removeClass('is-dirty');
+    self.isSearchSelected(false);
   };
   //this method loads the added markers from firebase
   self.loadFromFirebase = function (addedDBList){

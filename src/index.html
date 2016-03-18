@@ -20,12 +20,12 @@
           <span class="android-title mdl-layout-title">
           </span>
           <div class="android-header-spacer mdl-layout-spacer"></div>
-          <div id="main-search" class="android-search-box mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right mdl-textfield--full-width">
+          <div id="main-search" class="android-search-box mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right mdl-textfield--full-width" data-bind="css: { 'is-dirty': menuIsDirty }">
             <label class="mdl-button mdl-js-button mdl-button--icon" for="search-field">
               <i class="material-icons">search</i>
             </label>
             <div class="mdl-textfield__expandable-holder">
-              <input class="mdl-textfield__input" type="text" id="search-field" data-bind="textInput: searchField, hasFocus: isSearchSelected">
+              <input class="mdl-textfield__input" type="text" id="search-field" data-bind="textInput: searchField, hasFocus: isSearchSelected, event: {keypress: onEnterSearch}">
             </div>
           </div>
           <div class="android-navigation-container">
@@ -40,7 +40,7 @@
           </a>
         </div>
       </div>
-      <div class="android-drawer mdl-layout__drawer" id="menu-principal" style="align-items: center;">
+      <div class="android-drawer mdl-layout__drawer" id="menu-principal" style="align-items: center;" data-bind="css: { 'is-visible': menuPrincipal }">
         <span id="filter-title" class="mdl-layout-title" style="color: white; padding: 5px 5px;width: 100%;">Filter by<br></span>
         <div id="menu-filter" class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
           <label class="mdl-button mdl-js-button mdl-button--icon" for="filter-input">
@@ -75,11 +75,13 @@
         </nav>
       </div>
       <div class="android-content mdl-layout__content">
-        <div id="mapDiv"></div>
-        <div id="righ-sidebar" class="android-drawer mdl-layout__drawer_right">
+        <div id="mapDiv">
+          <div id="map"></div>
+        </div>
+        <div id="righ-sidebar" class="android-drawer mdl-layout__drawer_right" data-bind="css: { 'is-visible': showRighSidebar }">
           <div class="container" >
             <div class="header">
-              <a id="more-info-sidebar" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width:100%;" data-bind="click: showMoreInfo"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility_off</i> - Hide info</a>
+              <a id="more-info-sidebar" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width:100%;padding-left: 0px;padding-right: 0px;" data-bind="click: showMoreInfo"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility_off</i> - Hide info</a>
             </div>
             <div class="cont_elements">
                 <div class="element" style="margin-top: -49px;"><br><br></div>

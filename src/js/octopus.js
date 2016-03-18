@@ -14,6 +14,9 @@ var Octopus = function () {
   self.filterInput = ko.observable("");//this object keeps the value in the filter input
   self.isFilterSelected = ko.observable(false);////this object keeps the focus in the search input
   self.isSearchSelected = ko.observable(false);//this object keeps the focus in the filter input
+  self.showRighSidebar = ko.observable(false);//this object keeps the flag to display the right sidebar
+  self.menuIsDirty =  ko.observable(true);//this object keeps the flag to display the input on header
+  self.menuPrincipal = ko.observable(false);
   self.newPlaceFlag = false;//this flag is to check if a new location was entered on the search input
   self.filterFlag = false;//this flag is to check if the user is filtering some values
   self.filtered = false;//this flag is to check if the list has been filtered
@@ -21,7 +24,30 @@ var Octopus = function () {
   self.LoadedComplete = false;//this flag is to check if the list has been filtered
   self.newFrom = 'NULL';//this is an object to check from where is creating the new place on map
   self.addedPlacesList = [];//this arrayKeeps a list of places coming from Firebase
-  self.myDataRef = new Firebase('https://glaring-fire-483.firebaseio.com/');//connection to Firebase
+  self.myDataRef = new Firebase('https://p5-neighborhood-map.firebaseio.com/');//connection to Firebase
+
+  self.showRightSideBar = function (text){
+    if(self.showRighSidebar()){
+      self.showRighSidebar(false);
+    }else{
+      self.showRighSidebar(true);
+    }
+  };
+
+  self.onEnterSearch = function(el, e) {
+    var key = e.which;
+    if(key == 13) {
+      self.searchNewPlace();
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  self.bottunShowInfo = ko.pureComputed(function() {
+      return self.showRighSidebar() ? " - Hide info" : " - Show info";
+  }, self);
+
   //This method shows the Toast that display the message if a new city was added to the addedList
   self.showToast = function (text){
     'use strict';
@@ -58,19 +84,6 @@ var Octopus = function () {
   };
   //this methos is used to set the right size for the map on the div after the body is loaded
   self.onLoadBody = function (){
-    var resizeH = $( window ).innerHeight() - $('.android-header').height();
-    var sidebarHeigh = resizeH - 100;
-    resizeH += 'px';
-    sidebarHeigh += 'px';
-    $('#mapDiv').css('height',resizeH);
-    $('#contest').css('height',sidebarHeigh);
-    //I tried to implement this function throght knockoutjs but I couldn't :(
-    $('#search-field').keypress(function(e) {
-      var key = e.which;
-      if(key == 13) {
-        self.sendNewPlace();
-      }
-    });
     self.loadFirebase();
   };
   //this function set the focus into the filter input
@@ -83,10 +96,7 @@ var Octopus = function () {
   };
   //This methods displays the right sidebar
   self.showMoreInfo = function (){
-    $('#more-info').text(function(i, text){
-        return text === 'Hide info' ? 'Show info' : 'Hide info';
-    });
-    $('#righ-sidebar').toggleClass('is-visible');
+    self.showRightSideBar();
   };
   //this method actives the selected marker from the list
   self.viewMarker = function (nameMaker){
@@ -98,6 +108,7 @@ var Octopus = function () {
         google.maps.event.trigger(self.markers()[marker], 'click');
       }
     }
+    self.showRightSideBar();
     if(!self.filterFlag){
       $('#menu-principal').removeClass('is-visible');
       $('.mdl-layout__obfuscator').removeClass('is-visible');
@@ -109,13 +120,13 @@ var Octopus = function () {
     self.dbLoaded = false;
     self.newFrom = 'APP';
     var newPlace = {
-      'name' : $('#search-field').val(),
-      'location' : $('#search-field').val() + ', PA'
+      'name' : self.searchField(),
+      'location' : self.searchField() + ', PA'
     };
     pinPoster([newPlace]);
     self.newPlaceFlag = false;
     self.searchField('');
-    $('#main-search').removeClass('is-dirty');
+    self.menuIsDirty(false);
     self.isSearchSelected(false);
   };
   //this method loads the added markers from firebase
@@ -127,7 +138,7 @@ var Octopus = function () {
   //this method updates the addedlist on firebase
   self.updatedFirebase = function () {
     self.myDataRef.on('value', function(db) {
-      self.myDataRef.child('addedPlacesList').set(vM.viewModel.addedList());
+      self.myDataRef.child('addedPlacesList').set(self.addedList());
     });
   };
   //this method loads the infor from firebase

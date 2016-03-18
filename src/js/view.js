@@ -38,7 +38,7 @@ function initializeMap() {
   window.mapBounds = new google.maps.LatLngBounds();
   pinPoster(vM.viewModel.centers());
   google.maps.event.addListener(map, 'click', function() {
-    $('#righ-sidebar').removeClass('is-visible');
+    vM.viewModel.showRighSidebar(false);
     infoWindow.close();
   });
 }
@@ -77,16 +77,11 @@ function createMapMarker(placeData) {
 
     vM.viewModel.showToast(name + ' added to list');
     var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + formattedAddress + '';
-    infoWindow.setContent('<h3>' + name + '</h3><h4>' + formattedAddress + '</h4><br><center><img class="street-view-img" src="' + streetviewUrl + '"><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility</i> - Show info</button></center>');
+    infoWindow.setContent('<h3>' + name + '</h3><h4>' + formattedAddress + '</h4><br><center><img class="street-view-img" src="' + streetviewUrl + '"><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-bind="text: bottunShowInfo, click: showMoreInfo"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility</i> - Show info</button></center>');
+
     if(addedfromDB === false){
       infoWindow.open(map, marker);
     }
-    $('#more-info').click(function() {
-      $(this).text(function(i, text){
-          return text === 'Hide info' ? 'Show info' : 'Hide info';
-      });
-      $('#righ-sidebar').toggleClass('is-visible');
-    });
     if(vM.viewModel.newFrom === 'APP'){
       vM.viewModel.newFrom = 'NULL';
     }
@@ -123,26 +118,12 @@ function createMapMarker(placeData) {
       }
     }
     vM.viewModel.loadInfoSelected();
-    var textButton;
-    if($('#more-info').text() === 'Hide info'){
-      textButton = 'Hide info';
-    }
-    else{
-      textButton = 'Show info';
-    }
 
-    contentString = contentString + '<br><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility</i> - ' + textButton + '</button></center>';
+    contentString = contentString + '<br><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect" data-bind="text: bottunShowInfo, click: showMoreInfo"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility</i> - Show info</button></center>';
     infoWindow.setContent(contentString);
-
     if(!vM.viewModel.filterFlag){
       infoWindow.open(map, marker);
     }
-    $('#more-info').click(function() {
-      $(this).text(function(i, text){
-        return text === 'Hide info' ? 'Show info' : 'Hide info';
-      });
-      $('#righ-sidebar').toggleClass('is-visible');
-    });
   });
   bounds.extend(new google.maps.LatLng(lat, lon));
   map.fitBounds(bounds);
@@ -154,6 +135,3 @@ window.addEventListener('load', initializeMap);
 window.addEventListener('resize', function(e) {
   map.fitBounds(mapBounds);
 });
-//add map to the mapDiv
-var googleMap = '<div id="map"></div>';
-$('#mapDiv').append(googleMap);

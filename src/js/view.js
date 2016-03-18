@@ -5,11 +5,18 @@ var service;//this object keeps the google PlacesService results
 var modelName;//this object is used to keep the name of a city
 var streetviewUrl;//keeps the url for google streetview
 var newPlace;//keeps the new place information to create a new marker
+var addrStr;
 
 //when service.textSearch is called the callback will handle the results
 function callback(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
-    createMapMarker(results[0]);
+    addrStr = results[0].formatted_address;
+    if(addrStr.indexOf(", PA") > 0){
+      createMapMarker(results[0]);
+    }
+    else {
+      vM.viewModel.showToast('City not found in PA, USA');
+    }
   }
   else{
     vM.viewModel.showToast('Sorry place not found');
@@ -77,7 +84,7 @@ function createMapMarker(placeData) {
 
     vM.viewModel.showToast(name + ' added to list');
     var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + formattedAddress + '';
-    infoWindow.setContent('<h3>' + name + '</h3><h4>' + formattedAddress + '</h4><br><center><img class="street-view-img" src="' + streetviewUrl + '"><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-bind="text: bottunShowInfo, click: showMoreInfo"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility</i> - Show info</button></center>');
+    infoWindow.setContent('<h3>' + name + '</h3><h4>' + formattedAddress + '</h4><br><img class="street-view-img" src="' + streetviewUrl + '"><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onclick="triggerShowSide()"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility</i><span data-bind="text: bottunShowInfo"> - Show info</span></button>');
 
     if(addedfromDB === false){
       infoWindow.open(map, marker);
@@ -112,14 +119,14 @@ function createMapMarker(placeData) {
         modelName = vM.viewModel.centers()[center].name;
         if(modelName === name){
           streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x200&location=' + vM.viewModel.centers()[center].location + '';
-          contentString = '<h3>' + vM.viewModel.centers()[center].name + '</h3><h4>' + vM.viewModel.centers()[center].location + '</h4><center><img class="street-view-img" src="' + streetviewUrl + '">';
+          contentString = '<h3>' + vM.viewModel.centers()[center].name + '</h3><h4>' + vM.viewModel.centers()[center].location + '</h4><img class="street-view-img" src="' + streetviewUrl + '">';
           vM.viewModel.currentInfo(vM.viewModel.centers()[center]);
         }
       }
     }
     vM.viewModel.loadInfoSelected();
 
-    contentString = contentString + '<br><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect" data-bind="text: bottunShowInfo, click: showMoreInfo"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility</i> - Show info</button></center>';
+    contentString = contentString + '<br><button id="more-info" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect" onclick="triggerShowSide()"><i class="material-icons mdl-list__item-icon" style="color: white;">visibility</i><span data-bind="text: bottunShowInfo"> - Show info</span></button>';
     infoWindow.setContent(contentString);
     if(!vM.viewModel.filterFlag){
       infoWindow.open(map, marker);
@@ -135,3 +142,7 @@ window.addEventListener('load', initializeMap);
 window.addEventListener('resize', function(e) {
   map.fitBounds(mapBounds);
 });
+//this function shows the right sidebar when you click show more info button on the infoWindow
+function triggerShowSide() {
+  vM.viewModel.showRightSideBar();
+}

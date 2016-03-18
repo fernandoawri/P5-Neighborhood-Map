@@ -14,9 +14,8 @@ var Octopus = function () {
   self.filterInput = ko.observable("");//this object keeps the value in the filter input
   self.isFilterSelected = ko.observable(false);////this object keeps the focus in the search input
   self.isSearchSelected = ko.observable(false);//this object keeps the focus in the filter input
-  self.showRighSidebar = ko.observable(false);//this object keeps the flag to display the right sidebar
+  self.showRighSidebar = ko.observable(true);//this object keeps the flag to display the right sidebar
   self.menuIsDirty =  ko.observable(true);//this object keeps the flag to display the input on header
-  self.menuPrincipal = ko.observable(false);
   self.newPlaceFlag = false;//this flag is to check if a new location was entered on the search input
   self.filterFlag = false;//this flag is to check if the user is filtering some values
   self.filtered = false;//this flag is to check if the list has been filtered
@@ -25,7 +24,7 @@ var Octopus = function () {
   self.newFrom = 'NULL';//this is an object to check from where is creating the new place on map
   self.addedPlacesList = [];//this arrayKeeps a list of places coming from Firebase
   self.myDataRef = new Firebase('https://p5-neighborhood-map.firebaseio.com/');//connection to Firebase
-
+  //this method shows the right sidebar
   self.showRightSideBar = function (text){
     if(self.showRighSidebar()){
       self.showRighSidebar(false);
@@ -33,7 +32,7 @@ var Octopus = function () {
       self.showRighSidebar(true);
     }
   };
-
+  //this method triggers the searchNewPlace when the user press enter into the search input
   self.onEnterSearch = function(el, e) {
     var key = e.which;
     if(key == 13) {
@@ -43,11 +42,10 @@ var Octopus = function () {
       return true;
     }
   }
-
+  //this pureComputed keeps the value to display into the infoWindow show info button
   self.bottunShowInfo = ko.pureComputed(function() {
       return self.showRighSidebar() ? " - Hide info" : " - Show info";
   }, self);
-
   //This method shows the Toast that display the message if a new city was added to the addedList
   self.showToast = function (text){
     'use strict';
@@ -109,6 +107,8 @@ var Octopus = function () {
       }
     }
     self.showRightSideBar();
+//******* ISSUE with Material Design Lite: '.mdl-layout__obfuscator' is created by the framework
+//******* '#menu-principal' while adding the Binding for knockout-3 is not working properly
     if(!self.filterFlag){
       $('#menu-principal').removeClass('is-visible');
       $('.mdl-layout__obfuscator').removeClass('is-visible');

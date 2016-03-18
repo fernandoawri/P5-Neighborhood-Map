@@ -305,8 +305,6 @@ var Octopus = function () {
   };
   // Sets the map on all markers in the array.
   self.setMapOnAll = function (map) {
-    console.log(self.markers());
-    console.log(self.centers());
     for(marker in self.markers()){
       for(item in self.centers()){
         if(self.centers()[item].name === self.markers()[marker].title){

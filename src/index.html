@@ -40,19 +40,19 @@
           </a>
         </div>
       </div>
-      <div class="android-drawer mdl-layout__drawer" id="menu-principal">
-          <span id="filter-title" class="mdl-layout-title" style="color: white; padding: 5px 5px;">Filter by<br></span>
-          <div id="menu-filter" class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-            <label class="mdl-button mdl-js-button mdl-button--icon" for="filter-input">
-              <i class="material-icons">search</i>
-            </label>
-            <div class="mdl-textfield__expandable-holder">
-              <input class="mdl-textfield__input" type="text" id="filter-input"  data-bind="textInput: filterInput, hasFocus: isFilterSelected">
-              <label class="mdl-textfield__label" for="filter-input" data-bind="click: setIsFilterSelected">Filter by</label>
-            </div>
+      <div class="android-drawer mdl-layout__drawer" id="menu-principal" style="align-items: center;">
+        <span id="filter-title" class="mdl-layout-title" style="color: white; padding: 5px 5px;width: 100%;">Filter by<br></span>
+        <div id="menu-filter" class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+          <label class="mdl-button mdl-js-button mdl-button--icon" for="filter-input">
+            <i class="material-icons">search</i>
+          </label>
+          <div class="mdl-textfield__expandable-holder">
+            <input class="mdl-textfield__input" type="text" id="filter-input"  data-bind="textInput: filterInput, hasFocus: isFilterSelected">
+            <label class="mdl-textfield__label" for="filter-input" data-bind="click: setIsFilterSelected">Filter by</label>
           </div>
-        <div class="android-drawer-separator"></div>
-        <nav class="mdl-navigation" >
+        </div>
+        <div class="android-drawer-separator" style="width:100%;"></div>
+        <nav class="mdl-navigation" style="width:100%;">
           <span class="mdl-navigation__link" style="padding: 0px 45px;">Cities of PA</span>
           <div data-bind="foreach: centers">
             <a href="#" class="mdl-navigation__link fix-pading-menu"  data-bind="click: $parent.viewMarker($data.name)" style="padding: 8px 8px;">
